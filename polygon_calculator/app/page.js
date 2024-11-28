@@ -24,25 +24,30 @@ export default function Home() {
    * Ensures inputs are numeric and within valid ranges.
    */
   const validateInputs = () => {
-    // Ensure inputs are numeric
-    if (!/^\d+$/.test(numSides)) {
-      setError("Number of sides must be a whole number greater than 2.");
-      return false;
-    }
-    if (!/^\d+(\.\d+)?$/.test(sideLength)) {
-      setError("Side length must be a valid positive number.");
+    // Regex to validate if the input is a valid number (integer or decimal)
+    const validNumberRegex = /^\d+(\.\d+)?$/;
+
+    // Ensure numSides is a whole number and does not contain invalid symbols or text
+    if (!validNumberRegex.test(numSides) || numSides.includes(".")) {
+      setError("The number of sides must be a whole number. Text, punctuation marks, or symbols are not allowed.");
       return false;
     }
 
-    // Ensure the number of sides is an integer greater than 2
+    // Ensure sideLength is a positive number and does not contain invalid symbols or text
+    if (!validNumberRegex.test(sideLength)) {
+      setError("The side length must be a positive number. Text, punctuation marks, or symbols are not allowed.");
+      return false;
+    }
+
+    // Ensure the number of sides is greater than 2
     if (parseInt(numSides) <= 2) {
-      setError("Number of sides must be greater than 2.");
+      setError("The number of sides must be greater than 2.");
       return false;
     }
 
     // Ensure side length is positive
     if (parseFloat(sideLength) <= 0) {
-      setError("Side length must be a positive number.");
+      setError("The side length must be greater than 0.");
       return false;
     }
 
