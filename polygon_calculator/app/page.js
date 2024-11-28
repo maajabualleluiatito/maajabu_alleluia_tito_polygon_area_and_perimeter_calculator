@@ -1,3 +1,6 @@
+// Directing the app that we are using  client directive
+'use client';
+
 // Import necessary libraries
 import { useState } from "react";
 import axios from "axios";
