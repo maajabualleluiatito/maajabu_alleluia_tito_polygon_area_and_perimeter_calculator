@@ -1,0 +1,18 @@
+upstream polygon_app {
+    server 34.228.55.164:3000;
+    server 34.207.112.151:3000;
+}
+
+server {
+    listen 80;
+    server_name 54.221.57.130;
+
+    location / {
+        proxy_pass http://polygon_app;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
