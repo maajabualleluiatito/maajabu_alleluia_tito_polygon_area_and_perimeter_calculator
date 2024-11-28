@@ -1,4 +1,4 @@
-// Directing the app that we are using  client directive
+// Directing the app that we are using client directive
 'use client';
 
 // Import necessary libraries
@@ -7,8 +7,8 @@ import axios from "axios";
 
 /**
  * Component: Polygon Calculator
- * Combines an introduction to the app with the calculator functionality.
- * Validates inputs to ensure that the number of sides is an integer greater than 2.
+ * Validates inputs to ensure only valid numeric values are allowed and calculates
+ * the area and perimeter of regular polygons using a server-side API.
  */
 export default function Home() {
   // State variables for user inputs and results
@@ -20,28 +20,45 @@ export default function Home() {
   const [error, setError] = useState(""); // Error message to display in case of invalid input or API issues
 
   /**
+   * Function: validateInputs
+   * Ensures inputs are numeric and within valid ranges.
+   */
+  const validateInputs = () => {
+    // Ensure inputs are numeric
+    if (!/^\d+$/.test(numSides)) {
+      setError("Number of sides must be a whole number greater than 2.");
+      return false;
+    }
+    if (!/^\d+(\.\d+)?$/.test(sideLength)) {
+      setError("Side length must be a valid positive number.");
+      return false;
+    }
+
+    // Ensure the number of sides is an integer greater than 2
+    if (parseInt(numSides) <= 2) {
+      setError("Number of sides must be greater than 2.");
+      return false;
+    }
+
+    // Ensure side length is positive
+    if (parseFloat(sideLength) <= 0) {
+      setError("Side length must be a positive number.");
+      return false;
+    }
+
+    // Clear any previous error if inputs are valid
+    setError("");
+    return true;
+  };
+
+  /**
    * Function: calculate
    * Sends input data to the server API and retrieves calculated area and perimeter.
    * Displays results or an error message based on the API response.
    */
   const calculate = async () => {
     // Validate user inputs
-    if (!numSides || !sideLength) {
-      setError("Please fill in all fields.");
-      return;
-    }
-
-    // Ensure the number of sides is an integer greater than 2
-    if (!Number.isInteger(Number(numSides)) || numSides <= 2) {
-      setError("Number of sides must be an integer greater than 2.");
-      return;
-    }
-
-    // Ensure side length is positive
-    if (sideLength <= 0) {
-      setError("Side length must be a positive number.");
-      return;
-    }
+    if (!validateInputs()) return;
 
     try {
       setError(""); // Clear any existing error messages
@@ -79,11 +96,10 @@ export default function Home() {
         <div style={{ marginBottom: "10px" }}>
           <label>Number of Sides:</label>
           <input
-            type="number"
+            type="text"
             value={numSides}
             onChange={(e) => setNumSides(e.target.value)}
             placeholder="e.g., 5"
-            min="3"
             style={{ marginLeft: "10px", padding: "5px", width: "100%" }}
           />
         </div>
@@ -92,11 +108,10 @@ export default function Home() {
         <div style={{ marginBottom: "10px" }}>
           <label>Side Length:</label>
           <input
-            type="number"
+            type="text"
             value={sideLength}
             onChange={(e) => setSideLength(e.target.value)}
             placeholder="e.g., 10"
-            min="0.01"
             style={{ marginLeft: "10px", padding: "5px", width: "100%" }}
           />
         </div>
